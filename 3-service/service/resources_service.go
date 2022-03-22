@@ -13,6 +13,7 @@ type ResourceService interface {
 	Delete(id int) entity.Resource
 	Get(id int) entity.Resource
 	GetAll(page int, limit int) ([]*entity.Resource, int64)
+	GetByType(typeId int, page int, limit int) ([]*entity.Resource, int64)
 }
 
 type resourceService struct {
@@ -55,4 +56,9 @@ func (r *resourceService) GetAll(page int, limit int) ([]*entity.Resource, int64
 
 func (r *resourceService) Delete(id int) entity.Resource {
 	return r.repo.Delete(id)
+}
+
+func (r *resourceService) GetByType(typeId int, page int, limit int) ([]*entity.Resource, int64) {
+
+	return r.repo.GetByType(typeId, page, limit)
 }

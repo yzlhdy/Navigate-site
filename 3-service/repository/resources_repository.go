@@ -13,6 +13,8 @@ type ResourceRepository interface {
 	Delete(id int) entity.Resource
 	Get(id int) entity.Resource
 	GetAll(page int, limit int) ([]*entity.Resource, int64)
+	// 查询类型下的资源
+	GetByType(typeId int, page int, limit int) ([]*entity.Resource, int64)
 }
 
 type resourceRepository struct {
@@ -54,5 +56,12 @@ func (r *resourceRepository) GetAll(page int, limit int) ([]*entity.Resource, in
 	var count int64
 	r.db.Find(&resources).Count(&count)
 	r.db.Offset((page - 1) * limit).Limit(limit).Find(&resources)
+	return resources, count
+}
+
+func (r *resourceRepository) GetByType(id int, page int, limit int) ([]*entity.Resource, int64) {
+	var resources []*entity.Resource
+	var count int64
+	r.db.Preload("ResourceType").Offset((page-1)*limit).Limit(limit).Where("rid = ?", id).Find(&resources).Count(&count)
 	return resources, count
 }

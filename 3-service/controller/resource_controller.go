@@ -18,6 +18,7 @@ type ResourceController interface {
 	Create(ctx *gin.Context)
 	Delete(ctx *gin.Context)
 	Update(ctx *gin.Context)
+	GetByType(ctx *gin.Context)
 }
 
 type resourceController struct {
@@ -92,5 +93,18 @@ func (s *resourceController) Delete(ctx *gin.Context) {
 	}
 	result := s.service.Delete(id)
 	response := helper.BuildResponse(200, "success", result)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (s *resourceController) GetByType(ctx *gin.Context) {
+	typeId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		response := helper.BuildErrorResponse(401, err.Error(), nil, helper.EmptyObjectResponse{})
+		ctx.JSON(http.StatusOK, response)
+		return
+	}
+	page, limit := utils.GetPageAndLimit(ctx)
+	result, total := s.service.GetByType(typeId, page, limit)
+	response := helper.BuildResponsePage(200, "success", result, total)
 	ctx.JSON(http.StatusOK, response)
 }

@@ -45,6 +45,7 @@ func main() {
 		authRoutes.POST("/register", authController.Register)
 	}
 
+	// 资源类型
 	resourceType := route.Group("/api/v1", middleware.AuthorizeJWT(jwtService))
 
 	{
@@ -54,7 +55,7 @@ func main() {
 		resourceType.GET("/resource_type/:id", resourceTypeController.FindResourceType)
 		resourceType.DELETE("/resource_type/:id", resourceTypeController.DeleteResourceType)
 	}
-
+	// 资源
 	resource := route.Group("/api/v1", middleware.AuthorizeJWT(jwtService))
 	{
 		resource.GET("/resource", resourceController.GetAll)
@@ -62,6 +63,7 @@ func main() {
 		resource.PUT("/resource/:id", resourceController.Update)
 		resource.GET("/resource/:id", resourceController.Get)
 		resource.DELETE("/resource/:id", resourceController.Delete)
+		resource.GET("/resource/:id/resource_type", resourceController.GetByType)
 	}
 
 	route.Run(":8080")
