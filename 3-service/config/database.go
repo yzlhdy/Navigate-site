@@ -35,7 +35,7 @@ func SetUpDatabaseConnection() *gorm.DB {
 		panic(err)
 	}
 
-	db.AutoMigrate(&entity.User{}, &entity.ResourceType{})
+	db.AutoMigrate(&entity.User{}, &entity.ResourceType{}, &entity.Resource{})
 	return db
 }
 

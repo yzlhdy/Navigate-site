@@ -8,8 +8,8 @@ import (
 
 type ResourceTypeService interface {
 	ResourceList(page int, limit int) ([]*entity.ResourceType, int64)
-	CreateResourceType(resourceType dto.ResourceCreateDto) entity.ResourceType
-	UpdateResourceType(id int, resourceType dto.ResourceUpdateDto) entity.ResourceType
+	CreateResourceType(resourceType dto.ResourceTypeCreateDto) entity.ResourceType
+	UpdateResourceType(id int, resourceType dto.ResourceTypeUpdateDto) entity.ResourceType
 	FindResourceType(id int) entity.ResourceType
 	DeleteResourceType(id int) entity.ResourceType
 }
@@ -28,8 +28,9 @@ func (r *resourceTypeService) ResourceList(page int, limit int) ([]*entity.Resou
 	return r.repo.ResourceList(page, limit)
 }
 
-func (r *resourceTypeService) CreateResourceType(resourceType dto.ResourceCreateDto) entity.ResourceType {
+func (r *resourceTypeService) CreateResourceType(resourceType dto.ResourceTypeCreateDto) entity.ResourceType {
 	return r.repo.CreateResourceType(&entity.ResourceType{
+
 		Name: resourceType.Name,
 		Icon: resourceType.Icon,
 		Url:  resourceType.Url,
@@ -37,7 +38,7 @@ func (r *resourceTypeService) CreateResourceType(resourceType dto.ResourceCreate
 
 }
 
-func (r *resourceTypeService) UpdateResourceType(id int, resourceType dto.ResourceUpdateDto) entity.ResourceType {
+func (r *resourceTypeService) UpdateResourceType(id int, resourceType dto.ResourceTypeUpdateDto) entity.ResourceType {
 	return r.repo.UpdateResourceType(id, &entity.ResourceType{
 		Name: resourceType.Name,
 		Icon: resourceType.Icon,

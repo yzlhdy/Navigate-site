@@ -19,6 +19,15 @@ var (
 	authService    service.AuthService       = service.NewAuthService(responseAuth)
 	authController controller.AuthController = controller.NewAuthController(authService, jwtService)
 	// authController --end
+
+	// resourceTypeController --start
+	resourceTypeRepository repository.ResourceTypeRepository = repository.NewResourceTypeRepository(db)
+	resourceTypeService    service.ResourceTypeService       = service.NewResourceTypeRepository(resourceTypeRepository)
+	resourceTypeController controller.ResourceTypeController = controller.NewResourceTypeController(resourceTypeService)
+	// resourceController -- start
+	resourceRepository repository.ResourceRepository = repository.NewResourceRepository(db)
+	resourceService    service.ResourceService       = service.NewResourceService(resourceRepository)
+	resourceController controller.ResourceController = controller.NewResourceController(resourceService)
 )
 
 func main() {
@@ -34,6 +43,25 @@ func main() {
 	{
 		authRoutes.POST("/login", authController.Login)
 		authRoutes.POST("/register", authController.Register)
+	}
+
+	resourceType := route.Group("/api/v1", middleware.AuthorizeJWT(jwtService))
+
+	{
+		resourceType.GET("/resource_type", resourceTypeController.ResourceList)
+		resourceType.POST("/resource_type", resourceTypeController.CreateResourceType)
+		resourceType.PUT("/resource_type/:id", resourceTypeController.UpdateResourceType)
+		resourceType.GET("/resource_type/:id", resourceTypeController.FindResourceType)
+		resourceType.DELETE("/resource_type/:id", resourceTypeController.DeleteResourceType)
+	}
+
+	resource := route.Group("/api/v1", middleware.AuthorizeJWT(jwtService))
+	{
+		resource.GET("/resource", resourceController.GetAll)
+		resource.POST("/resource", resourceController.Create)
+		resource.PUT("/resource/:id", resourceController.Update)
+		resource.GET("/resource/:id", resourceController.Get)
+		resource.DELETE("/resource/:id", resourceController.Delete)
 	}
 
 	route.Run(":8080")
